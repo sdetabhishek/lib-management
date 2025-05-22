@@ -3,7 +3,13 @@ package libmanagement;
 import io.restassured.RestAssured;
 import org.testng.annotations.Test;
 
-public class AddBook {
+import static io.restassured.RestAssured.requestSpecification;
+import static io.restassured.RestAssured.responseSpecification;
+
+public class AddBook extends SpecBuilder {
+
+
+
 
     public String ID_Name;
 
@@ -21,11 +27,11 @@ public class AddBook {
         addBookReq.setIsbn("RSA301");
 
 
-        RestAssured.baseURI = "https://rahulshettyacademy.com";
-        AddBookRes res = RestAssured.given().log().all()
+
+        AddBookRes res = RestAssured.given().spec(requestSpecification).log().all()
                 .body(addBookReq)
                 .when().post("/Library/Addbook.php")
-                .then().log().all().extract().response().as(AddBookRes.class);
+                .then().spec(responseSpecification).log().all().extract().response().as(AddBookRes.class);
 
         /*
         JsonPath jp = new JsonPath(response);
@@ -43,24 +49,24 @@ public class AddBook {
     @Test(priority = 2)
     public void validateGetBookAPI() {
 
-        RestAssured.baseURI = "https://rahulshettyacademy.com";
-        RestAssured.given().log().all()
+
+        RestAssured.given().spec(requestSpecification).log().all()
                 .queryParam("ID", ID_Name)
                 .when().get("/Library/GetBook.php")
-                .then().log().all().extract().response().asPrettyString();
+                .then().spec(responseSpecification).log().all().extract().response().asPrettyString();
 
     }
 
     @Test(priority = 3)
     public void validateDeleteBookAPI() {
 
-        RestAssured.baseURI = "https://rahulshettyacademy.com";
-        RestAssured.given().log().all()
+
+        RestAssured.given().spec(requestSpecification).log().all()
                 .body("{\n" +
                         "    \"ID\": \"" + ID_Name + "\"\n" +
                         "}")
                 .when().delete("/Library/DeleteBook.php")
-                .then().log().all().extract().response().asPrettyString();
+                .then().spec(responseSpecification).log().all().extract().response().asPrettyString();
 
     }
 }
