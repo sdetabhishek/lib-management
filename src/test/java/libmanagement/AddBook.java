@@ -1,7 +1,6 @@
-package libmanager;
+package libmanagement;
 
 import io.restassured.RestAssured;
-import io.restassured.path.json.JsonPath;
 import org.testng.annotations.Test;
 
 public class AddBook {
@@ -9,19 +8,35 @@ public class AddBook {
     public String ID_Name;
 
 
+    //java.lang.RuntimeException: com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException
+
+
     @Test(priority = 1)
     public void validateAddBookAPI() {
 
+        AddBookReq addBookReq = new AddBookReq();
+        addBookReq.setName("RestAssured API Automation");
+        addBookReq.setAuthor("Abhishek");
+        addBookReq.setAisle("301");
+        addBookReq.setIsbn("RSA301");
+
 
         RestAssured.baseURI = "https://rahulshettyacademy.com";
-        String response = RestAssured.given().log().all()
-                .body(Content.AddBookContent())
+        AddBookRes res = RestAssured.given().log().all()
+                .body(addBookReq)
                 .when().post("/Library/Addbook.php")
-                .then().log().all().extract().response().asPrettyString();
+                .then().log().all().extract().response().as(AddBookRes.class);
 
+        /*
         JsonPath jp = new JsonPath(response);
         ID_Name = jp.getString("ID");
+        */
+
+
+        ID_Name = res.getID();
+        String message_Name = res.getMsg();
         System.out.println(ID_Name);
+        System.out.println(message_Name);
 
     }
 

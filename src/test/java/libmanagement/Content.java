@@ -1,4 +1,4 @@
-package libmanager;
+package libmanagement;
 
 public class Content {
 
